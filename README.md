@@ -60,7 +60,7 @@ Then, open `http://127.0.0.1:5000/` in your browser.
 
 ## Demo Video
 
-https\://drive.google.com/file/d/1jgwYieREzxBAQPZoch\_OPBdGITN676fI/view?usp=drivesdk
+https://drive.google.com/file/d/1jgwYieREzxBAQPZoch_OPBdGITN676fI/view?usp=drivesdk
 
 ## Team Members
 
