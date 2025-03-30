@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin_Donate Surplus Food</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        overflow: hidden; /* Hide the scrollbar for the entire body */
+    }
+
+    .header {
+        min-height: 100vh;
+        width: 100%;
+        background-image: url(static/img/donate.gif);
+        background-position: center;
+        background-size: cover;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    /* Navigation Bar Styles */
+    nav {
+        display: flex;
+        padding: 2% 6%;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0); /* Transparent background */
+        box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    nav img {
+        width: 200px;
+    }
+
+    .nav-links {
+        display: flex;
+        justify-content: flex-end; /* Align items to the right */
+        width: 100%; /* Ensure it stretches across */
+    }
+
+    .nav-links ul {
+        display: flex;
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .nav-links ul li {
+        padding: 8px 12px;
+        position: relative;
+    }
+
+    .nav-links ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    .nav-links ul li::after {
+        content: '';
+        width: 0%;
+        height: 2px;
+        background: #f44336;
+        display: block;
+        margin: auto;
+        transition: 0.5s;
+    }
+
+    .nav-links ul li:hover::after {
+        width: 100%;
+    }
+
+    /* Form container styling */
+    .form-container {
+        width: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        padding: 30px 20px;
+        border-radius: 10px;
+        color: #fff;
+        position: absolute;
+        top: 10%; /* Prevent touching top */
+        left: 50%;
+        transform: translate(-50%, 0);
+        cursor: grab;
+        max-height: 80vh; /* Prevent touching bottom */
+        overflow-y: auto; /* Add scroll if content exceeds height */
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+
+    .form-container::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+    }
+
+    .form-container:active {
+        cursor: grabbing;
+    }
+
+    .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 30px;
+    }
+
+    .form-container input, .form-container textarea, .form-container select {
+        width: 85%; /* Set width to 85% */
+        margin: 10px auto; /* Center the inputs inside the container */
+        padding: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.6);
+        color: #000;
+        display: block; /* Make sure inputs are block level to center them */
+    }
+
+    .form-container input[type="file"] {
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.8);
+        color: #000;
+        cursor: pointer;
+    }
+
+    .form-container input[type="file"]::-webkit-file-upload-button {
+        background: #FF1493;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .form-container input[type="file"]::-webkit-file-upload-button:hover {
+        background: #d11483;
+    }
+
+    .form-container button {
+        width: 85%; /* Center button */
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #FF1493;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        display: block; /* Make sure button is block level */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-container button:hover {
+        background-color: #d11483;
+    }
+
+    /* Make the placeholder text dark black */
+    .form-container input::placeholder,
+    .form-container textarea::placeholder {
+        color: #000;  /* Dark black */
+    }
+
+    @media(max-width: 700px) {
+        .form-container {
+            width: 80%;
+            top: 5%;
+            max-height: 90vh;
+        }
+
+        .nav-links {
+            position: absolute;
+            background: #FF1493;
+            height: 100vh;
+            width: 200px;
+            top: 0;
+            right: -200px;
+            text-align: left;
+            z-index: 2;
+            transition: 0.5s;
+        }
+
+        .nav-links.open {
+            right: 0;
+        }
+
+        nav .fa {
+            display: block;
+            color: #fff;
+            margin: 10px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-links" id="navLinks">
+            <ul>
+                <li><a href="{{ url_for('admin_homepage') }}">HOME</a></li>
+                <li><a href="{{ url_for('admin_donations') }}">FOOD BASE</a></li>
+                <li><a href="{{ url_for('admin_agri_manure') }}">GOLD TRASH</a></li>
+                <li><a href="{{ url_for('admin_users') }}">USERS</a></li>
+                <li><a href="/">LOGOUT</a></li>
+            </ul>
+        </div>
+        <i class="fa fa-bars" onclick="showMenu()"></i>
+    </nav>
+
+    <!-- Form for Surplus Food Donation -->
+    <div class="header"></div>
+    <div class="form-container" id="form-container">
+        <h1>Admin Donate Surplus Food</h1>
+        <form action="{{ url_for('admin_donate') }}" method="post" enctype="multipart/form-data">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="text" name="ph_no" placeholder="Contact Number" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <textarea name="address" placeholder="Food Location" rows="3" required></textarea>
+            <input type="text" name="food_name" placeholder="Food Name" required>
+            <input type="number" name="food_quantity" placeholder="Food Quantity (e.g., 10 meals)" required>
+            <input type="datetime-local" name="expiry" placeholder="Expiry Date and Time" required>
+            <input type="file" name="food_image" placeholder="Expiry Date and Time" accept="image/*" required>
+            <textarea name="description" placeholder="Additional Details (optional)" rows="4"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Enable dragging of the form container
+        const formContainer = document.getElementById('form-container');
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        formContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - formContainer.offsetLeft;
+            offsetY = e.clientY - formContainer.offsetTop;
+            formContainer.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                formContainer.style.left = `${e.clientX - offsetX}px`;
+                formContainer.style.top = `${e.clientY - offsetY}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            formContainer.style.cursor = 'grab';
+        });
+
+        // Function to show/hide the menu
+        
+        function showMenu() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.right === "-200px") {
+                navLinks.style.right = "0";
+            } else {
+                navLinks.style.right = "-200px";
+            }
+        }
+    </script>
+</body>
+</html>

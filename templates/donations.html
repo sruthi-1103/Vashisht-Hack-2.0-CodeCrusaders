@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surplus Food Donations</title>
+    <!-- Google Fonts Import -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: 'Lora', serif; /* Using Lora for a more elegant, stylish look */
+            margin: 0;
+            padding: 0;
+            background-image: url('/static/img/sensi.gif');  /* Set your background image */
+            background-size: cover; /* Make the image cover the entire page */
+            background-attachment: fixed; /* Make the background image fixed */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+        }
+
+        h1 {
+            text-align: center;  /* Center the heading */
+            color: #fff;  /* Make the heading text white */
+            font-family: 'Montserrat', sans-serif; /* A bold and modern font for the heading */
+            font-size: 2.5rem;
+            font-weight: 700;  /* Make the heading extra bold */
+            margin-bottom: 30px;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .donation-item {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.5);  /* Semi-transparent background */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .donation-item img {
+            width: 40%;
+            object-fit: cover;
+            animation: zoomEffect 6s ease-in-out infinite;  /* Apply zoom animation */
+        }
+
+        @keyframes zoomEffect {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);  /* Zoom in */
+            }
+            100% {
+                transform: scale(1);  /* Zoom out */
+            }
+        }
+
+        .donation-details {
+            padding: 20px;
+            width: 60%;
+            font-family: 'Montserrat', sans-serif; /* Use Montserrat for content for a modern look */
+            font-weight: 600;  /* Make content slightly bold */
+        }
+
+        .donation-details h2 {
+            margin: 0;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;  /* Bold font for the title of each donation */
+            font-size: 1.5rem;
+            font-weight: 700;  /* Make the title bold */
+        }
+
+        .donation-details p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .donation-details span {
+            font-weight: 700;  /* Bold style for labels */
+            color: #333;
+        }
+
+        .status {
+            font-size: 14px;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .status.not-expired {
+            background-color: #28a745;
+        }
+
+        .status.expired {
+            background-color: #dc3545;
+        }
+
+        nav {
+            display: flex;
+            padding: 2% 6%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav img {
+            width: 200px;
+        }
+
+        .nav-links {
+            flex: 1;
+            text-align: right;
+        }
+
+        .nav-links ul li {
+            list-style-type: none;
+            display: inline-block;
+            padding: 8px 12px;
+            position: relative;
+        }
+
+        .nav-links ul li a {
+            color: #ffff;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .nav-links ul li::after {
+            content: '';
+            width: 0%;
+            height: 2px;
+            background: #f44336;
+            display: block;
+            margin: auto;
+            transition: 0.5s;
+        }
+
+        .nav-links ul li:hover::after {
+            width: 100%;
+        }
+
+        @media(max-width: 700px) {
+            .nav-links ul li {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                background: #FF1493;
+                height: 100vh;
+                width: 200px;
+                top: 0;
+                right: -200px;
+                text-align: left;
+                z-index: 2;
+                transition: 2s;
+            }
+
+            nav .fa {
+                display: block;
+                color: #fff;
+                margin: 10px;
+                font-size: 22px;
+                cursor: pointer;
+            }
+
+            .nav-links ul {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-links" id="navLinks">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">HOME</a></li>
+                <li><a href="{{ url_for('donations') }}">FOODBASE</a></li>
+                <li><a href="{{ url_for('agri_manure') }}">GOLD TRASH</a></li>
+                <li><a href="/">LOGOUT</a></li>
+            </ul>
+        </div>
+        <i class="fa fa-bars" onclick="showMenu()"></i>
+    </nav>
+
+    <div class="container">
+        <h1 style="color: #F535AA;">Surplus Food Donations</h1>
+        {% if donations %}
+            {% for donation in donations %}
+                <div class="donation-item">
+                    <img src="/static/uploads/{{ donation['food_image'] or 'default.jpg' }}" alt="{{ donation['food_name'] }}">
+                    <div class="donation-details">
+                        <h2>{{ donation['food_name'] }}</h2>
+                        <p><span>Donor Name:</span> {{ donation['name'] }}</p>
+                        <p><span>Contact:</span> {{ donation['ph_no'] }}</p>
+                        <p><span>Email:</span> {{ donation['email'] }}</p>
+                        <p><span>Location:</span> {{ donation['address'] }}</p>
+                        <p><span>Quantity:</span> {{ donation['food_quantity'] }}</p>
+                        <p><span>Expiry Date:</span> {{ donation['expiry'] }}</p>
+                        <p><span>Description:</span> {{ donation['description'] or 'No additional details' }}</p>
+                        <span class="status {{ 'not-expired' if donation['status'] == 'NOT EXPIRED' else 'expired' }}">
+                            {{ donation['status'] }}
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No surplus food donations available at the moment.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function showMenu() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.right === "-200px") {
+                navLinks.style.right = "0";
+            } else {
+                navLinks.style.right = "-200px";
+            }
+        }
+    </script>
+</body>
+</html>
